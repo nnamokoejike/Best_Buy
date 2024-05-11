@@ -55,7 +55,7 @@ def start(store_obj):
                 print(f"\nOrder placed! Total cost: ${order_cost}")
 
         elif choice == "4":
-            print("Thank you for using JB Tech Equipment Store. Goodbye!")
+            print("Thank you very much today for using JB Tech Equipment Store. Goodbye!")
             break
 
         else:
