@@ -13,6 +13,8 @@ class Product:
         self.price = float(price)
         self.quantity = float(quantity)
         self.active = True
+        if quantity <= 0:
+            self.active = False
 
     def get_quantity(self):
         # returns quantity of product
