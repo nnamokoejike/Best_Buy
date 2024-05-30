@@ -1,7 +1,6 @@
 import products  # Importing product classes
-from Best_Buy import promotions
 from store import Store  # Importing Store class
-from promotions import PercentDiscount, SecondHalfPrice, ThirdOneFree  # Importing promotion classes
+import promotions
 
 
 def start(store_obj):

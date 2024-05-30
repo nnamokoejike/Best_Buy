@@ -1,8 +1,6 @@
-# test_products.py
-
 import pytest
 from products import Product, NonStockedProduct, LimitedProduct
-from promotions import PercentDiscount, SecondHalfPrice, ThirdOneFree
+from promotions import PercentDiscount, ThirdOneFree
 
 
 def test_create_normal_product():
