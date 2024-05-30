@@ -1,5 +1,6 @@
 import products
 from store import Store
+from promotions import PercentDiscount, SecondHalfPrice, ThirdOneFree
 
 
 def start(store_obj):
@@ -31,7 +32,7 @@ def start(store_obj):
                     break
 
                 product = None
-                for p in best_buy.get_all_products():
+                for p in store_obj.get_all_products():
                     if p.name.lower() == product_name.lower():
                         product = p
                         break
@@ -51,8 +52,8 @@ def start(store_obj):
 
                 shopping_list.append((product, quantity))
 
-                order_cost = store_obj.order(shopping_list)
-                print(f"\nOrder placed! Total cost: ${order_cost}")
+            order_cost = store_obj.order(shopping_list)
+            print(f"\nOrder placed! Total cost: ${order_cost}")
 
         elif choice == "4":
             print("Thank you very much today for using JB Tech Equipment Store. Goodbye!")
@@ -63,19 +64,21 @@ def start(store_obj):
 
 
 # setup initial stock of inventory
-# product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
-#                 products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-#                 products.Product("Google Pixel 7", price=500, quantity=250)
-#                 ]
-# best_buy = Store(product_list)
+product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
+                products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+                products.Product("Google Pixel 7", price=500, quantity=250),
+                products.NonStockedProduct("Windows License", price=125),
+                products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)]
 
-# setup initial stock of inventory
-product_list = [ products.Product("MacBook Air M2", price=1450, quantity=100),
-                 products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                 products.Product("Google Pixel 7", price=500, quantity=250),
-                 products.NonStockedProduct("Windows License", price=125),
-                 products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
-               ]
+# Create promotion catalog
+second_half_price = SecondHalfPrice("Second Half price!")
+third_one_free = ThirdOneFree("Third One Free!")
+thirty_percent = PercentDiscount("30% off!", percent=30)
+
+# Add promotions to products
+product_list[0].set_promotion(second_half_price)
+product_list[1].set_promotion(third_one_free)
+product_list[3].set_promotion(thirty_percent)
+
 best_buy = Store(product_list)
-
 start(best_buy)

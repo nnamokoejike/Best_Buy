@@ -1,73 +1,35 @@
 class Product:
-
     def __init__(self, name, price, quantity):
-        """
-        :param name: name of product in stock or to be added to the available stuck
-        :param price: Price of goods in stock
-        :param quantity: quantity of goods in stock
-        """
-        if not name or price < 0 or quantity < 0:
-            raise ValueError("Invalid input. Please provide a valid input")
-
-        self.name = str(name)
-        self.price = float(price)
-        self.quantity = float(quantity)
-        self.active = True
-        if quantity <= 0:
-            self.active = False
-
-    def get_quantity(self):
-        # returns quantity of product
-        return self.quantity
-
-    def set_quantity(self, quantity):
-        # deactivates quantity if quantity reaches zero
-        if quantity <= 0:
-            self.quantity = 0
-            self.deactivate()
-        else:
-            self.quantity = quantity
-
-    def is_active(self):
-        # return true when product is active or false when not active
-        return self.active
-
-    def activate(self):
-        # activates product
-        self.active = True
-
-    def deactivate(self):
-        # deactivates product
-        self.active = False
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+        self.promotion = None
 
     def show(self):
-        # return product details
-        return f"{self.name}, price: {self.price}, quantity: {self.quantity}"
+        promotion_info = f" (Promotion: {self.promotion.name})" if self.promotion else ""
+        return f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}{promotion_info}"
+
+    def set_promotion(self, promotion):
+        self.promotion = promotion
 
     def buy(self, quantity):
-        # returns total price of purchase and updates the product in stock
-        if not self.active:
-            raise ValueError(f"{self.name} is not available for purchase")
-        if quantity <= 0:
-            raise ValueError("quantity should be greater than zero. ")
-        if quantity > self.quantity:
-            raise ValueError(f"Insufficient quantity of {self.name} available.")
+        if self.promotion:
+            return self.promotion.apply_promotion(self, quantity)
+        return self.price * quantity
 
-        total_price = self.price * quantity
-        self.quantity -= quantity
+    def get_quantity(self):
+        return self.quantity
 
-        if self.quantity == 0:
-            self.deactivate()
-
-        return total_price
+    def is_active(self):
+        return self.quantity > 0
 
 
 class NonStockedProduct(Product):
     def __init__(self, name, price):
-        super().__init__(name, price, quantity=0)
+        super().__init__(name, price, 0)
 
-    def show(self):
-        return f"{self.name}, price: {self.price}, Quantity: 0 (Non-Stocked)"
+    def is_active(self):
+        return True
 
 
 class LimitedProduct(Product):
@@ -77,8 +39,5 @@ class LimitedProduct(Product):
 
     def buy(self, quantity):
         if quantity > self.maximum:
-            raise ValueError(f"Maximum quantity exceeded for {self.name}.")
+            raise ValueError(f"Cannot buy more than {self.maximum} of {self.name}")
         return super().buy(quantity)
-
-    def show(self):
-        return f"{self.name}, price: {self.price}, Quantity: {self.quantity}, Maximum: {self.maximum}"
